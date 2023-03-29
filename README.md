@@ -49,3 +49,45 @@ http://localhost:8080/cgi-bin/mapserv?map=/storage/mapserver-datasets/meta.map&s
 # One base patch of rotated HEALPix
 http://localhost:8080/cgi-bin/mapserv?map=/storage/mapserver-datasets/meta.map&service=wms&version=1.3.0&request=GetMap&layers=earth.naturalearth.rgb&bbox=3,2,4,3&width=800&height=800&crs=epsg:900914&format=pngRGB
 ```
+## Configuring CosmoScout VR:
+Now that the datasets are working, we only need to include them into CosmoScout VR. To do this, add the following section to the "plugins" array in your `"share/config/simple_desktop.json"`. You will have to adjust the mapserver links according to the location of your meta.map file.
+```
+...
+"csp-lod-bodies": {
+  "maxGPUTilesColor": 1024,
+  "maxGPUTilesDEM": 1024,
+  "tileResolutionDEM": 128,
+  "tileResolutionIMG": 256,
+  "mapCache": "/tmp/map-cache/",
+  "bodies": {
+    "Earth": {
+      "activeImgDataset": "Blue Marble",
+      "activeDemDataset": "ETOPO1",
+      "imgDatasets": {
+        "Blue Marble": {
+          "copyright": "NASA",
+          "url": "http://localhost/cgi-bin/mapserv?map=/storage/mapserver-datasets/meta.map&service=wms",
+          "layers": "earth.bluemarble.rgb",
+          "maxLevel": 6
+        },
+        "Natural Earth": {
+          "copyright": "NASA",
+          "url": "http://localhost/cgi-bin/mapserv?map=/storage/mapserver-datasets/meta.map&service=wms",
+          "layers": "earth.naturalearth.rgb",
+          "maxLevel": 6
+        }
+      },
+      "demDatasets": {
+        "ETOPO1": {
+          "copyright": "NOAA",
+          "url": "http://localhost/cgi-bin/mapserv?map=/storage/mapserver-datasets/meta.map&service=wms",
+          "layers": "earth.etopo1.dem",
+          "maxLevel": 6
+        }
+      }
+    }
+  }
+},
+...
+```
+You should also remove the "Earth" section from the "csp-simple-bodies" plugin configuration in the same file, else you will have two Earths drawn on top of each other!
