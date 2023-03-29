@@ -1,0 +1,22 @@
+LAYER
+  NAME "earth.bluemarble.rgb"
+  STATUS ON
+  TYPE RASTER
+  DATA "earth/bluemarble/bluemarble.jpg"
+
+  # Decreasing the oversampling factor will increase performance but reduce quality.
+  PROCESSING "OVERSAMPLE_RATIO=10"
+  PROCESSING "RESAMPLE=BILINEAR"
+
+  # The JPEG file obviously does not contain any projection information.
+  # Therefore we have to give the extent and projection here.
+  EXTENT -180 -90 180 90
+
+  PROJECTION
+    "init=epsg:4326"
+  END
+
+  METADATA
+    WMS_TITLE "earth.bluemarble.rgb"
+  END
+END

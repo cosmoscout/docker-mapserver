@@ -1,0 +1,19 @@
+LAYER
+  NAME "earth.naturalearth.rgb"
+  STATUS ON
+  TYPE RASTER
+  DATA "earth/naturalearth/NE1_HR_LC_SR_W_DR.tif"
+
+  # Decreasing the oversampling factor will increase performance but reduce quality.
+  PROCESSING "OVERSAMPLE_RATIO=10"
+  PROCESSING "RESAMPLE=BILINEAR"
+
+  # The GeoTiff is fully geo-referenced, so we can just use AUTO projection here.
+  PROJECTION
+    AUTO
+  END
+
+  METADATA
+    WMS_TITLE "earth.naturalearth.rgb"
+  END
+END
