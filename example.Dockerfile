@@ -1,4 +1,4 @@
-FROM ghcr.io/cosmoscout/mapserver-base:v4.0.0
+FROM ghcr.io/cosmoscout/mapserver-base:latest
 
 COPY storage /storage
 WORKDIR /tmp
