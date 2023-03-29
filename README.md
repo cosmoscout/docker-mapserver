@@ -51,7 +51,7 @@ http://localhost:8080/cgi-bin/mapserv?map=/storage/mapserver-datasets/meta.map&s
 ```
 ## Configuring CosmoScout VR:
 Now that the datasets are working, we only need to include them into CosmoScout VR. To do this, add the following section to the "plugins" array in your `"share/config/simple_desktop.json"`. You will have to adjust the mapserver links according to the location of your meta.map file.
-```
+``` json
 ...
 "csp-lod-bodies": {
   "maxGPUTilesColor": 1024,
