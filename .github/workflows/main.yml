@@ -1,0 +1,52 @@
+name: Push Docker images to GHCR
+
+on:
+  push:
+    tags:
+      - '**'
+
+jobs:
+  build-base-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build base Docker image
+        run: |
+          DOCKER_TAG=$(echo "${{ github.ref }}" | sed 's/refs\/tags\///')
+          docker buildx build -f base.Dockerfile -t ghcr.io/$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')/mapserver-base:${DOCKER_TAG} .
+      - name: Login to GHCR
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GHCR_PAT }}
+
+      - name: Push base Docker image to GHCR
+        run: |
+          DOCKER_TAG=$(echo "${{ github.ref }}" | sed 's/refs\/tags\///')
+          docker push ghcr.io/$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')/mapserver-base:${DOCKER_TAG}
+  build-child-image:
+    runs-on: ubuntu-latest
+    needs: build-base-image
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Login to GHCR
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GHCR_PAT }}
+        
+      - name: Build example Docker image
+        run: |
+          DOCKER_TAG=$(echo "${{ github.ref }}" | sed 's/refs\/tags\///')
+          docker buildx build --pull -f example.Dockerfile -t ghcr.io/$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')/mapserver-example:${DOCKER_TAG} .
+
+      - name: Push example Docker image to GHCR
+        run: |
+          DOCKER_TAG=$(echo "${{ github.ref }}" | sed 's/refs\/tags\///')
+          docker push ghcr.io/$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')/mapserver-example:${DOCKER_TAG}
