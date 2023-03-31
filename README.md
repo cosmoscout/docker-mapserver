@@ -12,7 +12,7 @@ docker buildx build -f base.Dockerfile . -t image_name
 ```
 ### To run a container and bind your dataset in pwd:
 
-```console
+```bash
 docker run -p 8080:80 \ 
 -v "$(pwd)":/storage/mapserver-datasets \  
 image_name
