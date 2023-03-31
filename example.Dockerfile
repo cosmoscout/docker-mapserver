@@ -1,4 +1,4 @@
-FROM ghcr.io/pdlayush/mapserver_base:latest
+FROM ghcr.io/pdlayush/mapserver_base
 
 COPY mapserver-datasets /mapserver-datasets
 
