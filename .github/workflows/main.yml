@@ -48,5 +48,5 @@ jobs:
 
       - name: Push example Docker image to GHCR
         run: |
-          DOCKER_TAG=$(echo "${{ github.ref }}" | sed 's/refs\/tags\///')
-          docker push ghcr.io/$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')/mapserver-example:${DOCKER_TAG}
+          OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          docker push ghcr.io/${OWNER}/mapserver-example --all-tags
