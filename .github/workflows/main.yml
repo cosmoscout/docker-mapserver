@@ -27,7 +27,7 @@ jobs:
         run: |
           DOCKER_TAG=$(echo "${{ github.ref }}" | sed 's/refs\/tags\///')
           docker push ghcr.io/$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')/mapserver-base:${DOCKER_TAG}
-  build-child-image:
+  build-example-image:
     runs-on: ubuntu-latest
     needs: build-base-image
     steps:
