@@ -4,8 +4,8 @@ FROM ubuntu:23.04
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone;
 
 #Install required packages
-RUN apt-get update && \
-    apt-get install --no-install-recommends -y \
+RUN apt update && \
+    apt install --no-install-recommends -y \
                         apache2 \
                         apache2-bin \
                         apache2-utils \
