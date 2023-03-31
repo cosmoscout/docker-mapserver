@@ -6,8 +6,8 @@ WORKDIR /tmp
 #Copying the shell file which will download the dataset
 ADD datas.sh /tmp
 
-RUN apt-get update \
-    && apt-get -y install curl \
+RUN apt update && \
+    apt install --no-install-recommends -y \
                 curl \
                 unzip \
                 gdal-bin \
