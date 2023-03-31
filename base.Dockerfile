@@ -1,4 +1,3 @@
-
 FROM ubuntu:23.04
 
 #Following provides timezone while installing apache2
