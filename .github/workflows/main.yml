@@ -46,7 +46,9 @@ jobs:
       - name: Build example Docker image
         run: |
           DOCKER_TAG=$(echo "${{ github.ref }}" | sed 's/refs\/tags\///')
-          docker buildx build --pull -f example.Dockerfile -t ghcr.io/$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')/mapserver-example:${DOCKER_TAG} .
+          OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          docker buildx build --pull -f example.Dockerfile -t ghcr.io/${OWNER}/mapserver-example:${DOCKER_TAG} \
+                                                           -t ghcr.io/${OWNER}/mapserver-example:latest .
 
       - name: Push example Docker image to GHCR
         run: |
