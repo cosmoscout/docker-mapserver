@@ -15,7 +15,9 @@ jobs:
       - name: Build base Docker image
         run: |
           DOCKER_TAG=$(echo "${{ github.ref }}" | sed 's/refs\/tags\///')
-          docker buildx build -f base.Dockerfile -t ghcr.io/$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')/mapserver-base:${DOCKER_TAG} .
+          OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          docker buildx build -f base.Dockerfile -t ghcr.io/${OWNER}/mapserver-base:${DOCKER_TAG} \
+                                                 -t ghcr.io/${OWNER}/mapserver-base:latest .
       - name: Login to GHCR
         uses: docker/login-action@v1
         with:
