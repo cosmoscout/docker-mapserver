@@ -1,10 +1,9 @@
-FROM ghcr.io/cosmoscout/mapserver-base:latest
+FROM ghcr.io/pdlayush/mapserver_base:latest
 
-COPY storage /storage
-WORKDIR /tmp
+COPY mapserver-datasets /mapserver-datasets
 
-#Copying the shell file which will download the dataset
-ADD datas.sh /tmp
+# Copying the shell file which will download the dataset
+COPY download_example_data.sh /mapserver-datasets
 
 RUN apt update && \
     apt install --no-install-recommends -y \
@@ -13,6 +12,5 @@ RUN apt update && \
                 gdal-bin \
     && rm -rf /var/lib/apt/lists/*;
 
-RUN ./datas.sh
-RUN rm -rf /tmp/*
-WORKDIR /storage/mapserver-datasets
+RUN ./download_example_data.sh
+WORKDIR /mapserver-datasets
