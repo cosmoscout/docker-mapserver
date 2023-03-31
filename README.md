@@ -25,7 +25,7 @@ This docker file uses `base.Dockerfile` as its base image and contains NASA's `B
 
 
 ### To build a image:
-``` console
+```bash
 docker buildx build -f example.Dockerfile . -t image_name
 ```
 ### To run a container:
