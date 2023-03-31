@@ -29,7 +29,7 @@ This docker file uses `base.Dockerfile` as its base image and contains NASA's `B
 docker buildx build -f example.Dockerfile . -t image_name
 ```
 ### To run a container:
-``` console
+```bash
 docker run -p 8080:80 image_name
 ```
 To ensure that everything is working as intended, one can simply disable apache2 using the following command:
