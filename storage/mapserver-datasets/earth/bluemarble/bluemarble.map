@@ -5,7 +5,7 @@ LAYER
   DATA "earth/bluemarble/bluemarble.jpg"
 
   # Decreasing the oversampling factor will increase performance but reduce quality.
-  PROCESSING "OVERSAMPLE_RATIO=10"
+  PROCESSING "OVERSAMPLE_RATIO=2"
   PROCESSING "RESAMPLE=BILINEAR"
 
   # The JPEG file obviously does not contain any projection information.
