@@ -7,7 +7,7 @@ This docker mapserver allows user to use their own dataset. The webserver is exp
 
 
 ### To build the docker image:
-``` console
+```bash
 docker buildx build -f base.Dockerfile . -t image_name
 ```
 ### To run a container and bind your dataset in pwd:
