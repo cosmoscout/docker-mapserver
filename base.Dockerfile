@@ -1,3 +1,10 @@
+# ------------------------------------------------------------------------------------------------ #
+#                                This file is part of CosmoScout VR                                #
+# ------------------------------------------------------------------------------------------------ #
+
+# SPDX-FileCopyrightText: German Aerospace Center (DLR) <cosmoscout@dlr.de>
+# SPDX-License-Identifier: MIT
+
 FROM ubuntu:23.04
 
 # Following provides timezone while installing apache2
@@ -15,7 +22,7 @@ RUN apt update && \
                         mapserver-doc \
                         libmapscript-perl \
                         libapache2-mod-fcgid \
-    && rm -rf /var/lib/apt/lists/*;
+    && rm -rf /var/lib/apt/lists/*
  
 # Copying apache config file
 COPY etc /etc 

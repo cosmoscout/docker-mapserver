@@ -1,4 +1,11 @@
-FROM ghcr.io/pdlayush/mapserver_base
+# ------------------------------------------------------------------------------------------------ #
+#                                This file is part of CosmoScout VR                                #
+# ------------------------------------------------------------------------------------------------ #
+
+# SPDX-FileCopyrightText: German Aerospace Center (DLR) <cosmoscout@dlr.de>
+# SPDX-License-Identifier: MIT
+
+FROM ghcr.io/pdlayush/mapserver-base:latest
 
 COPY mapserver-datasets /mapserver-datasets
 
@@ -10,7 +17,7 @@ RUN apt update && \
                 curl \
                 unzip \
                 gdal-bin \
-    && rm -rf /var/lib/apt/lists/*;
+    && rm -rf /var/lib/apt/lists/*
 
 RUN ./download_example_data.sh
-WORKDIR /mapserver-datasets
+
