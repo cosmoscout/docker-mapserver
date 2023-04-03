@@ -5,7 +5,7 @@
 # SPDX-FileCopyrightText: German Aerospace Center (DLR) <cosmoscout@dlr.de>
 # SPDX-License-Identifier: MIT
 
-FROM ghcr.io/pdlayush/mapserver-base:latest
+FROM ghcr.io/cosmoscout/mapserver-base:latest
 
 COPY mapserver-datasets /mapserver-datasets
 
@@ -20,4 +20,3 @@ RUN apt update && \
     && rm -rf /var/lib/apt/lists/*
 
 RUN ./download_example_data.sh
-
