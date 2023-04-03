@@ -25,8 +25,8 @@ RUN apt update && \
     && rm -rf /var/lib/apt/lists/*
  
 # Copying apache config file
-COPY etc /etc 
-  
+COPY etc /etc
+
 RUN a2enmod cgi fcgid
 
 WORKDIR /mapserver-datasets

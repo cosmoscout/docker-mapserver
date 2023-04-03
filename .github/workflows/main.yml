@@ -17,14 +17,14 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - id: docker_meta
+      - id: meta
         uses: docker/metadata-action@v4
         with:
           images: ghcr.io/${{ github.repository_owner }}/mapserver-base
       - uses: docker/build-push-action@v2
         with:
           file: base.Dockerfile
-          tags: ${{ steps.docker_meta.outputs.tags }}
+          tags: ${{ steps.meta.outputs.tags }}
           push: true
 
   build-example-image:
@@ -37,12 +37,13 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - id: docker_meta
+      - id: meta
         uses: docker/metadata-action@v4
         with:
           images: ghcr.io/${{ github.repository_owner }}/mapserver-example
       - uses: docker/build-push-action@v2
         with:
+          build-args: base_tag=${{ steps.meta.outputs.version }}
           file: example.Dockerfile
-          tags: ${{ steps.docker_meta.outputs.tags }}
+          tags: ${{ steps.meta.outputs.tags }}
           push: true

@@ -5,7 +5,8 @@
 # SPDX-FileCopyrightText: German Aerospace Center (DLR) <cosmoscout@dlr.de>
 # SPDX-License-Identifier: MIT
 
-FROM ghcr.io/cosmoscout/mapserver-base:latest
+ARG base_tag=latest
+FROM ghcr.io/cosmoscout/mapserver-base:${base_tag}
 
 COPY mapserver-datasets /mapserver-datasets
 
