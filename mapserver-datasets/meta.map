@@ -1,0 +1,44 @@
+MAP
+  NAME "CosmoScout VR Maps"
+  STATUS ON
+  EXTENT -180 -90 180 90
+  SIZE 800 400
+
+  # This tells the MapSever to look for PROJ init files next to this map file.
+  # This way we can use our custom epsg codes.
+  CONFIG "PROJ_LIB" "."
+
+  PROJECTION
+    "init=epsg:4326"
+  END
+
+  # This format will be requested by CosmoScout VR for elevation data.
+  OUTPUTFORMAT
+    NAME "tiffGray"
+    DRIVER "GDAL/GTiff"
+    IMAGEMODE FLOAT32
+    EXTENSION "tiff"
+    FORMATOPTION "COMPRESS=LZW"
+  END
+
+  # This format will be requested by CosmoScout VR for color imagery data.
+  OUTPUTFORMAT
+    NAME "pngRGB"
+    DRIVER "GD/PNG"
+    IMAGEMODE RGB
+    EXTENSION "png"
+  END
+
+  WEB
+    METADATA 
+      WMS_TITLE           "CosmoScout-VR-WMS-Server"
+      WMS_ONLINERESOURCE  "localhost/cgi-bin/mapserv?"
+      WMS_ENABLE_REQUEST  "*" 
+      WMS_SRS             "EPSG:4326 EPSG:900914 EPSG:900915"
+    END
+  END
+
+  INCLUDE "earth/bluemarble/bluemarble.map"
+  INCLUDE "earth/naturalearth/naturalearth.map"
+  INCLUDE "earth/etopo1/etopo1.map"
+END
