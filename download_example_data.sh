@@ -18,8 +18,8 @@ curl -L -o /tmp/download/ETOPO1_Ice_c_geotiff.zip https://www.ngdc.noaa.gov/mgg/
 curl -L -o /mapserver-datasets/earth/bluemarble/bluemarble.jpg https://eoimages.gsfc.nasa.gov/images/imagerecords/73000/73776/world.topo.bathy.200408.3x21600x10800.jpg
 
 # Unzip the dataset and copy it to our workdir.
-unzip -d /tmp/download /tmp/download/NE1_HR_LC_SR_W_DR.zip
-unzip -d /tmp/download /tmp/download/ETOPO1_Ice_c_geotiff.zip
+unzip -d /mapserver-datasets/earth/naturalearth /tmp/download/NE1_HR_LC_SR_W_DR.zip
+unzip -d /mapserver-datasets/earth/etopo1 /tmp/download/ETOPO1_Ice_c_geotiff.zip
 
 # Optimizing the natural earth dataset.
 gdal_translate -co tiled=yes -co compress=deflate /tmp/download/NE1_HR_LC_SR_W_DR.tif /mapserver-datasets/earth/naturalearth/NE1_HR_LC_SR_W_DR.tif
