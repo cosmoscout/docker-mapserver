@@ -1,0 +1,16 @@
+name: Check Compliance with REUSE Specification
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  reuse:
+    name: REUSE Compliance Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      - name: Run REUSE Compliance Check
+        uses: fsfe/reuse-action@v1
