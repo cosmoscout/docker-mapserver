@@ -1,3 +1,7 @@
+<!-- 
+SPDX-FileCopyrightText: German Aerospace Center (DLR) <cosmoscout@dlr.de>
+SPDX-License-Identifier: CC0-1.0
+ -->
 # Map-Server Container for CosmoScout VR
 
 A dockerized mapserver for CosmoScout [csp-lod bodies](https://github.com/cosmoscout/cosmoscout-vr/tree/main/plugins/csp-lod-bodies#readme). This repo has been created taking three use-cases into consideration - `loading example map data`, `loading custom map data` and `creating custom map data containers`. Each of the use-cases are discussed briefly below.
