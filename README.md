@@ -2,7 +2,7 @@
 
 A dockerized mapserver for CosmoScout [csp-lod bodies](https://github.com/cosmoscout/cosmoscout-vr/tree/main/plugins/csp-lod-bodies#readme). This repo has been created taking three use-cases into consideration - `loading example map data`, `loading custom map data` and `creating custom map data containers`. Each of the use-cases are discussed briefly below.
 
-## Loading Example Map Data
+## 1) Loading Example Map Data
 Here you run a dockerized mapserver using NASA's `Blue Marble` and the `Natural Earth image` datasets and `ETOPO1` elevation data.
 
 ### Running the Server
@@ -70,7 +70,7 @@ Now that the datasets are working, we only need to include them into CosmoScout 
 ```
 You should also remove the "Earth" section from the "csp-simple-bodies" plugin configuration in the same file, else you will have two Earths drawn on top of each other!
 
-## Loading Custom Map Data
+## 2) Loading Custom Map Data
 Here you can run a dockerized mapserver using your own custom dataset.
 
 ### Preparing the Map Data
@@ -84,7 +84,7 @@ docker run -ti --rm -p 8080:80 -v "$(pwd)":/mapserver-datasets ghcr.io/cosmoscou
 ```
 The command pulls the docker image from GHCR, binds localhost port 8080 to container port 80, and mounts the datasets in your `pwd` to the containers `mapserver-datasets` directory.
 
-## Creating Custom Map Data Containers
+## 3) Creating Custom Map Data Containers
 Here you can build the docker image locally using `docker build` instead of pulling it from `GHCR` and run a dockerized mapserver using your own custom dataset.
 
 ### Preparing the Map Data
