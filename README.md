@@ -11,7 +11,7 @@ To run the dockerized mapserver, you can pull the docker image (built from the `
 ```bash
 docker run -ti --rm -p 8080:80 ghcr.io/cosmoscout/mapserver-example
 ```
-The command also binds localhost port 8080 to container port 80.
+The command binds localhost port 8080 to container port 80.
 
 To ensure that everything is working as intended, see if you can access the example-datasets using the following links:
 
@@ -82,7 +82,7 @@ To run the dockerized mapserver, you can pull the docker image (built from `base
 ```bash
 docker run -ti --rm -p 8080:80 -v "$(pwd)":/mapserver-datasets ghcr.io/cosmoscout/mapserver-base
 ```
-The command pulls the docker image from GHCR,binds localhost port 8080 to container port 80, and mounts the datasets in your `pwd` to the containers `mapserver-datasets` directory.
+The command pulls the docker image from GHCR, binds localhost port 8080 to container port 80, and mounts the datasets in your `pwd` to the containers `mapserver-datasets` directory.
 
 ## Creating Custom Map Data Containers
 Here you can build the docker image locally using `docker build` instead of pulling it from `GHCR` and run a dockerized mapserver using your own custom dataset.
