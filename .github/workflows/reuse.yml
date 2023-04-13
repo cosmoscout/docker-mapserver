@@ -10,7 +10,7 @@ name: Check Compliance with REUSE Specification
 on:
   push:
     branches:
-      - main
+      - '**'
 
 jobs:
   reuse:
