@@ -1,11 +1,7 @@
 #!/bin/bash
 
-# ------------------------------------------------------------------------------------------------ #
-#                                This file is part of CosmoScout VR                                #
-# ------------------------------------------------------------------------------------------------ #
-
 # SPDX-FileCopyrightText: German Aerospace Center (DLR) <cosmoscout@dlr.de>
-# SPDX-License-Identifier: MIT
+# SPDX-License-Identifier: CC0-1.0
 
 # Exit on error.
 set -e
