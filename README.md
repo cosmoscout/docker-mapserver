@@ -4,25 +4,31 @@ SPDX-License-Identifier: CC0-1.0
  -->
 # Map-Server Container for CosmoScout VR
 
-A dockerized mapserver for CosmoScout [csp-lod bodies](https://github.com/cosmoscout/cosmoscout-vr/tree/main/plugins/csp-lod-bodies#readme). This repo has been created taking three use-cases into consideration - `loading example map data`, `loading custom map data` and `creating custom map data containers`. Each of the use-cases are discussed briefly below.
+This repository provides a dockerized [MapServer](https://mapserver.org) for the [csp-lod bodies](https://github.com/cosmoscout/cosmoscout-vr/tree/main/plugins/csp-lod-bodies) plugin of [CosmoScout VR](https://github.com/cosmoscout/cosmoscout-vr).
+It has been created taking three use-cases into consideration:
+First, it provides an easy way for **loading example terrain data** in CosmoScout VR.
+Second, it allows **loading custom terrain data**.
+Finally, you can use this as a basis for **creating custom containers** for easy distribution of terrain data to others.
+Each of the use-cases are discussed briefly below.
 
-## 1) Loading Example Map Data
-Here you run a dockerized mapserver using NASA's [Blue Marble](https://visibleearth.nasa.gov/collection/1484/blue-marble) and the [Natural Earth image](https://www.naturalearthdata.com/) datasets and [ETOPO1](https://www.ncei.noaa.gov/products/etopo-global-relief-model) elevation data.
+:information_source: _This guide works both on Linux and on Windows (using the Windows Subsystem for Linux)._
 
-### Running the Server
-To run the dockerized mapserver, you can pull the docker image (built from the `example.Dockerfile`) from GHCR using the command:
+## 1. Loading Example Map Data
+
+Here you run a dockerized map-server using NASA's [Blue Marble](https://visibleearth.nasa.gov/collection/1484/blue-marble) and the [Natural Earth](https://www.naturalearthdata.com/) datasets and [ETOPO1](https://www.ncei.noaa.gov/products/etopo-global-relief-model) elevation data.
+To run the dockerized map-server, you can pull the docker image from the GitHub container registry using the command:
 
 ```bash
 docker run -ti --rm -p 8080:80 ghcr.io/cosmoscout/mapserver-example
 ```
-The command binds localhost port 8080 to container port 80.
+The command pulls the image, runs the server in the container, and binds localhost port 8080 to container port 80.
+If everything is working as intended, you should be able to access these links: 
+* [Natural Earth in WGS84](http://localhost:8080/cgi-bin/mapserv?map=/mapserver-datasets/meta.map&service=wms&version=1.3.0&request=GetMap&layers=earth.naturalearth.rgb&bbox=-90,-180,90,180&width=1600&height=800&crs=epsg:4326&format=pngRGB)
+* [Blue Marble in CosmoScout's special HEALPix projection](http://localhost:8080/cgi-bin/mapserv?map=/mapserver-datasets/meta.map&service=wms&version=1.3.0&request=GetMap&layers=earth.bluemarble.rgb&bbox=0,0,5,5&width=800&height=800&crs=epsg:900914&format=pngRGB)
 
-To ensure that everything is working as intended, see if you can [access](http://localhost:8080/cgi-bin/mapserv?map=/mapserver-datasets/meta.map&service=wms&version=1.3.0&request=GetMap&layers=earth.naturalearth.rgb&bbox=0,0,5,5&width=800&height=800&crs=epsg:900914&format=pngRGB) the [example-datasets.](http://localhost:8080/cgi-bin/mapserv?map=/mapserver-datasets/meta.map&service=wms&version=1.3.0&request=GetMap&layers=earth.naturalearth.rgb&bbox=-90,-180,90,180&width=1600&height=800&crs=epsg:4326&format=pngRGB)
-
-### Configuring CosmoScout VR:
-<!-- The following configuration steps are described in use case 1 -->
-
-Now that the datasets are working, we only need to include them into CosmoScout VR. To do this, add the following section to the "plugins" object in your `"share/config/simple_desktop.json"`. 
+Now that the datasets are working, we only need to include them into CosmoScout VR.
+To do this, add the following section to the "plugins" object in your `share/config/simple_desktop.json`.
+You should also remove the "Earth" section from the "csp-simple-bodies" plugin configuration in the same file, else you will have two Earths drawn on top of each other!
 
 ```json
 ...
@@ -31,7 +37,7 @@ Now that the datasets are working, we only need to include them into CosmoScout 
   "maxGPUTilesDEM": 1024,
   "tileResolutionDEM": 128,
   "tileResolutionIMG": 256,
-  "mapCache": "/tmp/map-cache/",
+  "mapCache": "map-cache/",
   "bodies": {
     "Earth": {
       "activeImgDataset": "Blue Marble",
@@ -39,13 +45,13 @@ Now that the datasets are working, we only need to include them into CosmoScout 
       "imgDatasets": {
         "Blue Marble": {
           "copyright": "NASA",
-          "url": "http://localhost/cgi-bin/mapserv?map=/mapserver-datasets/meta.map&service=wms",
+          "url": "http://localhost:8080/cgi-bin/mapserv?map=/mapserver-datasets/meta.map&service=wms",
           "layers": "earth.bluemarble.rgb",
           "maxLevel": 6
         },
         "Natural Earth": {
           "copyright": "NASA",
-          "url": "http://localhost/cgi-bin/mapserv?map=/mapserver-datasets/meta.map&service=wms",
+          "url": "http://localhost:8080/cgi-bin/mapserv?map=/mapserver-datasets/meta.map&service=wms",
           "layers": "earth.naturalearth.rgb",
           "maxLevel": 6
         }
@@ -53,7 +59,7 @@ Now that the datasets are working, we only need to include them into CosmoScout 
       "demDatasets": {
         "ETOPO1": {
           "copyright": "NOAA",
-          "url": "http://localhost/cgi-bin/mapserv?map=/mapserver-datasets/meta.map&service=wms",
+          "url": "http://localhost:8080/cgi-bin/mapserv?map=/mapserver-datasets/meta.map&service=wms",
           "layers": "earth.etopo1.dem",
           "maxLevel": 6
         }
@@ -63,13 +69,40 @@ Now that the datasets are working, we only need to include them into CosmoScout 
 },
 ...
 ```
-You should also remove the "Earth" section from the "csp-simple-bodies" plugin configuration in the same file, else you will have two Earths drawn on top of each other!
 
-## 2) Loading Custom Map Data
-Here you can run a dockerized mapserver using your own custom dataset.
+Now restart CosmoScout VR and after a short delay, Earth should be visible showing the Blue-Marble imagery on top of the ETOPO elevation data.
+Map tiles will be cached in the directory `bin/map-cache`.
+You can change this location with the respective settings key in the configuration above. 
+
+
+## 2. Loading Custom Map Data
+
+This repository also provides an "empty" map-server container which you can use to serve your own custom data.
+The map-server uses [gdal](https://gdal.org/) to load the data.
+Hence it can be used to serve all data formats which are understood by gdal.
+
+### Optimizing the Datasets
+
+Before you start, you should try to optimize your data.
+To optimize your dataset you can use the `gdal_translate` and `gdaladdo` commands.
+To make the data access as fast as possible, you should always add overviews to your data and store it using a tiling scheme.
+With [gdal](https://gdal.org/), this can be done using the following commands:
+
+```bash
+gdal_translate -co tiled=yes -co compress=deflate DATA_SET.tif DATA_SET_optimized.tif
+
+# 2 4 8 16 are overview levels which you can change according to your specific requirement.
+gdaladdo -r cubic DATA_SET_optimized.tif 2 4 8 16 32 64
+```
 
 ### Preparing the Map Data
-As you are using your own custom dataset some changes need to be made to the `meta.map` file. Also each of your `dataset` needs to have a appropriate `.map` file. The structure of  `mapserver-datasets` directory while using `example-datasets` in `use case 1` is below for reference:
+
+Then, you should prepare a directory similar to the `mapserver-datasets` directory in this repository.
+Simply copy the `epsg`, the `meta.map`, and one of the other `.map` files.
+You can also add some of the example datasets to serve as base layers (refer to the [download_example_data.sh](download_example_data.sh) script for how this data is downloaded).
+
+Once everything is in place, your directory structure may look like this:
+
 ```bash
 mapserver-datasets
     ├── earth
@@ -79,188 +112,120 @@ mapserver-datasets
     │   ├── etopo1
     │   │   ├── ETOPO1_Ice_c_geotiff.tif
     │   │   └── etopo1.map
-    │   └── naturalearth
-    │       ├── naturalearth.map
-    │       └── NE1_HR_LC_SR_W_DR.tif
+    │   └── MY_DATA
+    │       ├── DATA_SET_1.tif
+    │       ├── DATA_SET_2.jp2
+    │       ├── DATA_SET_3.png
+    │       ├── ...
+    │       └── MY_DATA.map
     ├── epsg
     └── meta.map
 ```
-Please follow similar directory structure for ease of use. Also please note that the `.map` file for each dataset has the same name as its directory.
 
-### Changing meta.map and adding custom .map file for your tif files
-The `meta.map` file in the `mapserver-datasets` directory caters to our example datasets and you need to make changes to the file while using your own custom dataset. You will have to make changes mainly in line `45-47` in `meta.map` file. Let's assume after adding your `custom dataset` to  the `mapserver-datasets` directory the directory structure looks like:
-```bash
-mapserver-datasets/
-└── custom_earth
-    └── asia
-        ├── asia.map
-        └── custom_asia.tif
-```
-You will have to remove line `45-47` in `meta.map` and replace it with:
+The `meta.map` file in the `mapserver-datasets` directory includes all the other map files.
+You have to adapt the `INCLUDE` statements at the bottom of the file according to your directory structure.
+For the example above, it would look like this:
+
 ```bash
 ...
- INCLUDE "custom_earth/asia/asia.map"
+ INCLUDE "earth/bluemarble/bluemarble.map"
+ INCLUDE "earth/etopo1/etopo1.map"
+ INCLUDE "earth/MY_DATA/MY_DATA.map"
 END
 ```
-To create a custom `.map` file for your `tif` files, you can look at `.map` files in the `mapserver-datasets/earth` directory for reference. Here we will create the `asia.map` file taking the `custom_earth` example above:
-```
+To create the `MY_DATA.map` file for your data files, you can look at `.map` files in the `mapserver-datasets/earth` directory for reference.
+Here is an example how this could look like.
+
+:information_source: _For more information on the map file format, please refer to the [official MapServer documentation](https://mapserver.org/mapfile/layer.html)._
+
+
+```bash
 LAYER
-  NAME "custom_earth.asia.rgb" # Please make changes here accordingly
+  NAME "earth.DATA_SET_1.rgb"
   STATUS ON
   TYPE RASTER
-  DATA "custom_earth/asia/custom_asia.tif" # Please make changes here accordingly
+  DATA "earth/MY_DATA/DATA_SET_1.tif"
 
   # Decreasing the oversampling factor will increase performance but reduce quality.
   PROCESSING "OVERSAMPLE_RATIO=2"
   PROCESSING "RESAMPLE=BILINEAR"
 
-  # The GeoTiff is fully geo-referenced, so we can just use AUTO projection here.
+  # If the data is not fully geo-referenced, you could specifiy the projection here.
   PROJECTION
     AUTO
   END
 
   METADATA
-    WMS_TITLE "custom_earth.asia.rgb" # Please make changes here accordingly
+    WMS_TITLE "earth.DATA_SET_1.rgb"
   END
 END
-```
- 
-### Optimising the dataset
-To optimise your dataset you can use `gdal_translate` and `gdaladdo` command. Let's assume you are in the `custom_earth` directory with the following structure:
-```bash
-custom_earth
-    └── asia
-        ├── asia.map
-        └── custom_asia.tif
-```
-To optimise the `custom_asia.tif` file and copy it to our `mapserver-datasets/custom_earth/` directory, the command will be:
-```bash
-# Step 1: Optimize TIFF file and generate overviews using gdal_translate.
-gdal_translate -co tiled=yes -co compress=deflate custom_earth/asia/custom_asia.tif /path to/mapserver-datasets/custom_earth/asia/custom_asia.tif 
 
-# in `/path/to/mapserver-datasets/custom_earth/asia/custom_asia.tif` custom_asia.tif is the name of the optimised output tif file.
-
-# gdal_translate will copy your tif file to the appropriate directory inside mapserver-datasets directory, here the custom_asia.tif file is copied to mapserver-datasets/custom_earth/asia directory.
-
-# Step 2: Generate overviews using gdaladdo.
-gdaladdo -r cubic /path/to/mapserver-datasets/custom_earth/asia/custom_asia.tif 2 4 8 16
-
-# 2 4 8 16 are overview levels which you can change according to your specific requirement. 
+# More Layers could be added here.
+# LAYER
+#  NAME "earth.DATA_SET_2.rgb"
+# ...
 ```
 
-### Running the Server
-To run the dockerized mapserver, you can pull the docker image (built from `base.Dockerfile`) from GHCR using the command:
+
+### Running the Server & Configuring CosmoScout VR
+
+To run the dockerized map-server, you can pull the docker image from GitHub container registry using the command:
 
 ```bash
+cd mapserver-datasets
 docker run -ti --rm -p 8080:80 -v "$(pwd)":/mapserver-datasets ghcr.io/cosmoscout/mapserver-base
 ```
-The command pulls the docker image from GHCR, binds localhost port 8080 to container port 80, and mounts the datasets in your `pwd` to the containers `mapserver-datasets` directory.
+The command mounts your current working directory (which contains the `epsg` and `meta.map` files) to the containers `/mapserver-datasets` directory.
 
-### Adding your meta.map file and epsg file to the docker container:
-When you pull the docker image from GHCR the docker image uses the `meta.map` file and the `epsg` file for `use case 1`, you will have to replace these files with your `meta.map` file and `epsg` file. You can do so using the following commands:
-```bash
-# To ensure that the docker image is running and to get the container id.
-docker ps 
-
-# Copying the meta.map and epsg file in the working directory to the mapserver-datasets directory in the container.
-docker cp meta.map epsg [container id]:/mapserver-datasets
-
-# To check if the copying was successful or not, make sure that the output is same as your meta.map file.
-docker exec [container id] cat /mapserver-datasets/meta.map
-```
-
-### Configuring CosmoScout VR:
-<!-- The following configuration steps are described in use case 2 -->
-
-Now that the datasets are working, we only need to include them into CosmoScout VR. To do this, add the following section to the "plugins" object in your `"share/config/simple_desktop.json"`. 
+Now that the server is running, we only need to include the new layers into CosmoScout VR.
+To do this, add a new dataset to the configuration of "csp-lod-bodies" in your `share/config/simple_desktop.json`.
+This could look like this:
 
 ```json
-...
-"csp-lod-bodies": {
-  "maxGPUTilesColor": 1024,
-  "maxGPUTilesDEM": 1024,
-  "tileResolutionDEM": 128,
-  "tileResolutionIMG": 256,
-  "mapCache": "/tmp/map-cache",
-  "bodies": {
-    "Earth": {
-      "activeImgDataset": "Blue Marble",
-      "activeDemDataset": "ETOPO1",
-      "imgDatasets": {
-        "Blue Marble": {
-          "copyright": "NASA",
-          "url": "http://localhost/cgi-bin/mapserv?map=/mapserver-datasets/meta.map&service=wms",
-          "layers": "earth.bluemarble.rgb",
-          "maxLevel": 6
-        },
-        "Natural Earth": {
-          "copyright": "NASA",
-          "url": "http://localhost/cgi-bin/mapserv?map=/mapserver-datasets/meta.map&service=wms",
-          "layers": "earth.naturalearth.rgb",
-          "maxLevel": 6
-        }
-      },
-      "demDatasets": {
-        "ETOPO1": {
-          "copyright": "NOAA",
-          "url": "http://localhost/cgi-bin/mapserv?map=/mapserver-datasets/meta.map&service=wms",
-          "layers": "earth.etopo1.dem",
-          "maxLevel": 6
-        }
-      }
-    }
-  }
+"Blue Marble + MY DATA": {
+  "copyright": "NASA & MYSELF",
+  "url": "http://localhost:8080/cgi-bin/mapserv?map=/mapserver-datasets/meta.map&service=wms",
+  "layers": "earth.bluemarble.rgb,earth.DATA_SET_1.rgb",
+  "maxLevel": 6
 },
-...
 ```
-This `json` snippet caters to our `example dataset` in `use case 1`. Here we will briefly walk you through this `JSON` snippet so that you can make appropriate changes depending on the dataset you are using. You can start making changes from the `Earth` object.
-- Replace `Earth` with the body whose data you are using eg: if it is Mars then it will be `"Mars": {`.
-- `activeImgDataset`is a key for the currently active image for the body and `activeDemDataset` is a key for the elevation dataset being used.
-- `imageDatasets` is a nested object where each of the dataset being used are defined as a object.
-- `Blue Marble`, `Natural Earth` both are the datasets we are using in our `use case 1` which we have declared as objects. 
-- `layers` is a key which specifies the layers to be used from the dataset. In our json snippet `.rgb` means Red-Green-Blue image of Earth.
-- `maxLevel` is a key which specifies the maximum level of detail or zoom that can be displayed for the dataset.
-- `demDatasets` is a object for the elevation data being used, the key `layers` specifies the layers to be used from the elevation dataset.
 
-## 3) Creating Custom Map Data Containers
-Here you can build the docker image locally using `docker build` instead of pulling it from `GHCR` and run a dockerized mapserver using your own custom dataset.
+You can combine multiple layers in one dataset as shown above.
+The layers will be drawn on top of each other as they are listed from left to right.
+The `maxLevel` defines how often the planetary surface will be subdivided when this dataset is shown.
+If you have a high-resolution dataset, you will have to increase this value.
 
-### Preparing the Map Data
-As you are using your own custom dataset some changes need to be made to the `meta.map` file. Also each of your `dataset` needs to have a appropriate `.map` file. The structure of  `mapserver-datasets` directory while using `example-datasets` as in `use case 1` is below for reference:
-```bash
-mapserver-datasets
-    ├── earth
-    │   ├── bluemarble
-    │   │   ├── bluemarble.jpg
-    │   │   └── bluemarble.map
-    │   ├── etopo1
-    │   │   ├── ETOPO1_Ice_c_geotiff.tif
-    │   │   └── etopo1.map
-    │   └── naturalearth
-    │       ├── naturalearth.map
-    │       └── NE1_HR_LC_SR_W_DR.tif
-    ├── epsg
-    └── meta.map
+On Earth, the base patches are about 7000 km by 7000 km.
+A `maxLevel` of 6 would result in a minimum tile size of about 7000 km / 2^6 ≈ 109 km.
+With a `tileResolutionIMG` of 256, this would result in a pixel size of about 0.4 km.
+While this is sufficient for the example datasets, you may need higher values for your data.
+
+
+## 3. Creating Custom Map Data Containers
+
+You can also build the docker images locally using `docker build` instead of pulling them from the GitHub container registry.
+Using this, you can create and distribute you own containerized map-servers using your own custom datasets.
+You can have a look at the [`example.Dockerfile`](example.Dockerfile) to get an idea how this works.
+
+In the most simple case, you would prepare the `mapserver-datasets` directory according to use-case 2) above.
+Then create a `Dockerfile` with this content:
+
+```docker
+FROM ghcr.io/cosmoscout/mapserver-base:latest
+COPY mapserver-datasets /mapserver-datasets
 ```
-Please use the `mapserver-datasets` directory, remove the `earth` directory with your `custom dataset` directory and follow similar directory structure for ease of use. Also please note that the `.map` file for each dataset has the same name as its directory.
 
-### Changing meta.map and adding custom .map file for your tif files
-Please refer to the [Changing meta.map and adding custom .map file for your tif files](#changing-metamap-and-adding-custom-map-file-for-your-tif-files) described in `use case 2`.
-### Optimising the dataset
-Please refer to the [Optimising the dataset](#optimising-the-dataset) described in `use case 2`.
-### Running the Server
-To run the dockerized mapserver, you will first have to build the docker image using the following command:
+And build the container using this command:
 
 ```bash
-docker buildx build -f base.Dockerfile . -t image_name
+docker buildx build -f Dockerfile . -t image_name
 ```
-You have built a docker image using the `base.Dockerfile`. Now to run a container and mount your custom dataset, you can use the following command:
+
+Now run a container using the following command:
 
 ```bash
-docker run -p 8080:80 -v "$(pwd)":/storage/mapserver-datasets image_name
+docker run -ti --rm -p 8080:80 image_name
 ```
-The command runs a docker container using the image `image_name` and binds localhost port 8080 to container port 80.
-### Configuring CosmoScout VR:
-<!-- The following configuration steps are described in use case 3 -->
-Please refer to the [Configure Cosmoscout VR](#configuring-cosmoscout-vr-section-2) described in `use case 2`.
+
+You can now push this image to a container registry and your colleagues will be able to run their own copy of the map-server!
 
