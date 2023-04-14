@@ -1,9 +1,5 @@
-# ------------------------------------------------------------------------------------------------ #
-#                                This file is part of CosmoScout VR                                #
-# ------------------------------------------------------------------------------------------------ #
-
 # SPDX-FileCopyrightText: German Aerospace Center (DLR) <cosmoscout@dlr.de>
-# SPDX-License-Identifier: MIT
+# SPDX-License-Identifier: CC0-1.0
 
 FROM ubuntu:23.04
 

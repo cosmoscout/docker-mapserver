@@ -1,5 +1,8 @@
-# SPDX-FileCopyrightText: Copyright (c) 2000, Frank Warmerdam
+# SPDX-FileCopyrightText: Copyright (c) 2000, Frank Warmerdam 
 # SPDX-License-Identifier: MIT
+
+# Copied from https://github.com/OSGeo/PROJ
+# Custom epsg files is because of the additional configuration at the EOF.
 
 <metadata> +version=9.2.0 +origin=EPSG +lastupdate=2017-12-17
 # HD1909
