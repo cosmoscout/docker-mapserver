@@ -1,7 +1,8 @@
 <!-- 
 SPDX-FileCopyrightText: German Aerospace Center (DLR) <cosmoscout@dlr.de>
-SPDX-License-Identifier: CC0-1.0
+SPDX-License-Identifier: CC-BY-4.0
  -->
+
 # Map-Server Container for CosmoScout VR
 
 This repository provides a dockerized [MapServer](https://mapserver.org) for the [csp-lod bodies](https://github.com/cosmoscout/cosmoscout-vr/tree/main/plugins/csp-lod-bodies) plugin of [CosmoScout VR](https://github.com/cosmoscout/cosmoscout-vr).
