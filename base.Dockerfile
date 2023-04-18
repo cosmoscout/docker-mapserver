@@ -23,10 +23,12 @@ RUN apt update && \
 # Copying apache config file.
 COPY etc /etc
 
+RUN echo "ServerName 127.0.0.1" >> /etc/apache2/apache2.conf
+
 RUN a2enmod cgi fcgid
 
 WORKDIR /mapserver-datasets
-RUN chown -R www-data: /mapserver-datasets 
+RUN chown -R www-data: /mapserver-datasets
 RUN chmod -R g+w /mapserver-datasets
 
 EXPOSE 80
