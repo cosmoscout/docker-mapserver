@@ -15,7 +15,6 @@ RUN apt update && \
                         ca-certificates \
                         cgi-mapserver \
                         mapserver-bin \
-                        mapserver-doc \
                         libmapscript-perl \
                         libapache2-mod-fcgid \
     && rm -rf /var/lib/apt/lists/*
